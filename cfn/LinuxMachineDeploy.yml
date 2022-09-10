@@ -274,7 +274,7 @@ Resources:
       ImageId: !Ref InstanceAMI
       Monitoring: True
       SubnetId:
-        Fn::ImportValue: !Sub '${VPCImportName}-App1-a'
+        Fn::ImportValue: !Sub '${VPCImportName}-App1Subnet1'
       UserData:
         # This script below is to install AmazonCloudWatchAgent, restart AmazonCloudWatchAgent and tell the result to cloudformation.
         Fn::Base64: !Sub |

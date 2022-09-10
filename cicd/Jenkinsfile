@@ -21,7 +21,7 @@ pipeline {
         VPCTemplate     = 'vpc-alb-app-db.yml'
         EC2StackName    = 'LinuxMachineDeploy'
         EC2Template     = 'LinuxMachineDeploy.yml'
-        EC2VPCName      = 'WebApp1'
+        //VPCName      = 'WebApp1'
         InstanceType    = 't2.micro'
 
     }
@@ -56,9 +56,9 @@ pipeline {
                             aws cloudformation create-stack --stack-name $EC2StackName \
                             --template-body file://$EC2Template \
                             --parameters ParameterKey=InstanceType,ParameterValue=$InstanceType \
-                                ParameterKey=VPCImportName,ParameterValue=$EC2VPCName \
+                                ParameterKey=VPCImportName,ParameterValue=$VPCALBStack \
                             --tags Key=owner,Value=$OwnerEmail \
-                            --capabilities CAPABILITY_IAM                          
+                            --capabilities CAPABILITY_IAM                     
                         '''
                     }
                 }
