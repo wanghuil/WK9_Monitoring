@@ -18,9 +18,9 @@ pipeline {
         S3BucketName    = 'william-jr8-wk8' //Change to yours, used to save cfn yml files larger than 50KB
         AWS_REGION      = 'ap-southeast-2'
         VPCStackName    = 'VPCALBStack'
-        VPCTemplate     = 'vpc-alb-app-db.yml'
+        VPCTemplate     = 'vpc-alb-app-db.yaml'
         EC2StackName    = 'LinuxMachineDeploy'
-        EC2Template     = 'LinuxMachineDeploy.yml'
+        EC2Template     = 'LinuxMachineDeploy.yaml'
         //VPCName      = 'WebApp1'
         InstanceType    = 't2.micro'
 
