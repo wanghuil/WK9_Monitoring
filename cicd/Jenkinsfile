@@ -15,7 +15,7 @@ pipeline {
     environment {
         AWS_CRED        = 'AWS_Will' //Change to yours
         OwnerEmail      = 'william@gmail.com' //Change to yours
-        VPCStackName    = 'vpc_alb_stack'
+        VPCStackName    = 'VPCALBStack'
         VPCTemplate     = 'file://vpc-alb-app-db.yml'
         EC2StackName    = 'LinuxMachineDeploy'
         EC2Template     = 'file://LinuxMachineDeploy.yml'
