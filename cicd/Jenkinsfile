@@ -36,7 +36,7 @@ pipeline {
                             aws s3 mb s3://$S3BucketName --region $AWS_REGION
                             aws s3 cp $VPCTemplate s3://$S3BucketName
                             aws cloudformation create-stack --stack-name $VPCStackName \
-                            --template-url https://$S3BucketName.s3.amazonaws.com/$VPCStackName \
+                            --template-url https://$S3BucketName.s3.amazonaws.com/$VPCTemplate \
                             --tags Key=owner,Value=$OwnerEmail \
                             --capabilities CAPABILITY_NAMED_IAM
                             aws s3 rm s3://$S3BucketName/$VPCTemplate
@@ -56,7 +56,7 @@ pipeline {
                             aws cloudformation create-stack --stack-name $EC2StackName \
                             --template-body file://$EC2Template \
                             --parameters ParameterKey=InstanceType,ParameterValue=$InstanceType \
-                                ParameterKey=VPCImportName,ParameterValue=$VPCALBStack \
+                                ParameterKey=VPCImportName,ParameterValue=$VPCStackName \
                             --tags Key=owner,Value=$OwnerEmail \
                             --capabilities CAPABILITY_IAM                     
                         '''
