@@ -36,7 +36,8 @@ pipeline {
                             aws s3 cp $VPCTemplate s3://$S3BucketName
                             aws cloudformation create-stack --stack-name $VPCStackName \
                             --template-url https://$S3BucketName.s3.amazonaws.com/$VPCTemplate \
-                            --tags Key=owner,Value=$OwnerEmail
+                            --tags Key=owner,Value=$OwnerEmail \
+                            --capabilities CAPABILITY_NAMED_IAM
                             aws s3 rm s3://$S3BucketName/$VPCTemplate
                             aws s3 rb s3://$S3BucketName
                         '''
