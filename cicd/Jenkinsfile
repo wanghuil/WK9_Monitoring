@@ -57,7 +57,7 @@ pipeline {
                             --template-body file://$EC2Template \
                             --parameters ParameterKey=InstanceType,ParameterValue=$InstanceType \
                                 ParameterKey=VPCImportName,ParameterValue=$EC2VPCName \
-                            --tags Key=owner,Value=$OwnerEmail  
+                            --tags Key=owner,Value=$OwnerEmail \
                             --capabilities CAPABILITY_IAM                          
                         '''
                     }
