@@ -1,0 +1,115 @@
+pipeline {
+    agent any
+    parameters {
+        booleanParam defaultValue: false, name: 'blCreateVPC'
+        booleanParam defaultValue: false, name: 'blCreateInstances'
+        booleanParam defaultValue: false, name: 'blApplyAWS'
+        booleanParam defaultValue: false, name: 'blTestAnsible'
+        booleanParam defaultValue: false, name: 'blUpdateAWS'
+        booleanParam defaultValue: false, name: 'blDestroy'
+
+    }
+    options {
+        ansiColor('xterm')
+    }
+    environment {
+        AWS_CRED        = 'AWS_Will' //Change to yours
+        OwnerEmail      = 'william@gmail.com' //Change to yours
+        VPCStackName    = 'vpc_alb_stack'
+        VPCTemplate     = 'file://vpc-alb-app-db.yml'
+        EC2StackName    = 'LinuxMachineDeploy'
+        EC2Template     = 'file://LinuxMachineDeploy.yml'
+        InstanceType    = 't2.micro'
+
+    }
+    stages {
+        stage('Create VPC_ALB..') {
+            when {expression{return params.blCreateVPC}}
+            steps {
+                withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
+                    // some block
+                    dir('cfn') {
+                        sh '''
+                            aws cloudformation create-stack --stack-name $VPCStackName \
+                            --template-body $VPCTemplate
+                            --tags Key=owner,Value=$OwnerEmail
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Create Instances') {
+            when {expression{return params.blCreateInstances}}
+            steps {
+                withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
+                    // some block
+                    dir('cfn') {
+                        sh '''
+                            aws cloudformation create-stack --stack-name $EC2StackName \
+                            --template-body $EC2Template
+                            --parameters ParameterKey=InstanceType,ParameterValue=$InstanceType
+                            --tags Key=owner,Value=$OwnerEmail
+                            
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Launch Instances') {
+            when {expression{return params.blApplyAWS}}
+            steps {
+                withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
+                    // some block
+                    dir('terraform/aws') {
+                        sh '''
+                            terraform init
+                            terraform apply --auto-approve
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Test Ansible') {
+            when {expression{return params.blTestAnsible}}
+            steps {
+                withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
+                    // some block
+                    dir('ansible') {
+                        sh '''
+                            ansible all  -m ping
+                            ansible tag_shell -a "cat /home/ubuntu/hello.txt"
+                            ansible tag_ansible -a "curl localhost"
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Update AWS EC2') {
+            when {expression{return params.blUpdateAWS}}
+            steps {
+                withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
+                    // some block
+                    dir('ansible') {
+                        sh '''
+                            ansible-playbook jenkins_docker.yml 
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Destroy Instances') {
+            when {expression{return params.blDestroy}}
+            steps {
+                withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
+                    // some block
+                    dir('terraform/aws') {
+                        sh '''
+                            terraform destroy --auto-approve
+                        '''
+                        sh 'chmod +x ./del_ami.sh && ./del_ami.sh'
+                    }
+                }
+            }
+        }
+    }
+}
