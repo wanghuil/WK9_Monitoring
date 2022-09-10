@@ -21,7 +21,7 @@ pipeline {
         VPCTemplate     = 'vpc-alb-app-db.yml'
         EC2StackName    = 'LinuxMachineDeploy'
         EC2Template     = 'LinuxMachineDeploy.yml'
-        EC2VPCName      = 'WebApp1-VPC'
+        EC2VPCName      = 'WebApp1'
         InstanceType    = 't2.micro'
 
     }
