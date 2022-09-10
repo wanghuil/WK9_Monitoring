@@ -15,10 +15,12 @@ pipeline {
     environment {
         AWS_CRED        = 'AWS_Will' //Change to yours
         OwnerEmail      = 'william@gmail.com' //Change to yours
+        S3BucketName    = 'william-jr8-wk8' //Change to yours, used to save cfn yml files larger than 50KB
+        AWS_REGION      = 'ap-southeast-2'
         VPCStackName    = 'VPCALBStack'
-        VPCTemplate     = 'file://vpc-alb-app-db.yml'
+        VPCTemplate     = 'vpc-alb-app-db.yml'
         EC2StackName    = 'LinuxMachineDeploy'
-        EC2Template     = 'file://LinuxMachineDeploy.yml'
+        EC2Template     = 'LinuxMachineDeploy.yml'
         InstanceType    = 't2.micro'
 
     }
@@ -30,8 +32,10 @@ pipeline {
                     // some block
                     dir('cfn') {
                         sh '''
+                            aws s3 mb s3://$S3BucketName --region $AWS_REGION
+                            aws s3 cp $VPCTemplate s3://$S3BucketName
                             aws cloudformation create-stack --stack-name $VPCStackName \
-                            --template-body $VPCTemplate
+                            --template-url https://$S3BucketName.s3.amazonaws.com/$VPCTemplate
                             --tags Key=owner,Value=$OwnerEmail
                         '''
                     }
