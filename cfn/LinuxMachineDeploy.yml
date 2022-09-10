@@ -274,7 +274,7 @@ Resources:
       ImageId: !Ref InstanceAMI
       Monitoring: True
       SubnetId:
-        Fn::ImportValue: !Sub '${VPCImportName}-App1Subnet1'
+        Fn::ImportValue: !Sub '${VPCImportName}-Shared1Subnet1'
       UserData:
         # This script below is to install AmazonCloudWatchAgent, restart AmazonCloudWatchAgent and tell the result to cloudformation.
         Fn::Base64: !Sub |
@@ -498,7 +498,7 @@ Resources:
       ImageId: !Ref InstanceAMI
       Monitoring: True
       SubnetId:
-        Fn::ImportValue: !Sub '${VPCImportName}-App1Subnet1'
+        Fn::ImportValue: !Sub '${VPCImportName}-Shared1Subnet1'
       UserData:
         # This script below is to install AmazonCloudWatchAgent, restart AmazonCloudWatchAgent and tell the result to cloudformation.
         Fn::Base64: !Sub |
@@ -509,7 +509,12 @@ Resources:
           # Update to latest versions from the repos
           yum update -y
           # Install stress utility and the amazon cloudwatch agent
-          yum install stress amazon-cloudwatch-agent -y
+          yum install stress amazon-cloudwatch-agent docker -y
+          curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+          wget -P /home/ec2-user/ https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
+          tar xfz /home/ec2-user/node_exporter-1.3.1.linux-amd64.tar.gz -C /home/ec2-user
+          /home/ec2-user/node_exporter-1.3.1.linux-amd64/node_exporter
           # Trigger the cfn-init section above under metadata
           /opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region} --configsets default
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
