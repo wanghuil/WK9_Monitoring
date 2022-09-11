@@ -38,5 +38,5 @@
         group: ubuntu
         mode: '0644'
     - name: Run docker-compose in /home/ubuntu
-      community.docker.docker_compose:
+      community.general.docker_compose:
         project_src: /home/ubuntu/
