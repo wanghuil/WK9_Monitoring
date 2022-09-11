@@ -91,10 +91,10 @@ pipeline {
                                 -var "ec2_count=${InstanceCount}" \
                                 -var "sec_ports=${SecurityPorts}" \
                                 --auto-approve
-                            terraform output aws_instance.monitor.1.public_ip
+                            terraform output -json ec2_public_ips | jq -r '.[1]'
                         '''
                         // jq must be installed
-                        //dd_ip = sh(returnStdout: true, script: "terraform output ecw_public_ips[1]").trim() | jq
+                        //dd_ip = sh(returnStdout: true, script: "terraform output -json ecw_public_ips[1]").trim() | jq
                     }
                 }
             }
