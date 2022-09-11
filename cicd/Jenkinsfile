@@ -24,8 +24,11 @@ pipeline {
         InstanceType    = 't2.micro'
         SecurityGroupID = 'sg-da83229f'
         InstanceCount   = 3
+        SecurityPorts   = [22,443,8080,9090,9100]
 
     }
+    // Test passed on a Jenkins server installed on VM
+    // Docker Jenkins server needs to use agent for terraform etc.,  or install tools by entering Jenkins container
     stages {
         stage('CFN Create VPC_ALB..') {
             when {expression{return params.blCreateVPC}}
@@ -71,6 +74,11 @@ pipeline {
             }
         }
         stage('TF Launch Instances') {
+            // Terraform must be installed
+            // ssh key pairs must be configured:
+            // sudo -i
+            // su jenkins
+            // ssh-keygen (press ENTER for passphrase)
             when {expression{return params.blTFApply}}
             steps {
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
@@ -81,6 +89,7 @@ pipeline {
                             terraform apply \
                                 -var "sec_gid=${SecurityGroupID}" \
                                 -var "ec2_count=${InstanceCount}" \
+                                -var "sec_ports=${SecurityPorts}" \
                                 --auto-approve
                         '''
                     }
@@ -88,6 +97,9 @@ pipeline {
             }
         }
         stage('Test Ansible') {
+            // Important: boto3 & botocore must be installed
+            // apt install python3-pip
+            // pip install boto3 botocore
             when {expression{return params.blTestAnsible}}
             steps {
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
@@ -123,6 +135,7 @@ pipeline {
                             terraform destroy   \
                                 -var "sec_gid=${SecurityGroupID}" \
                                 -var "ec2_count=${InstanceCount}" \
+                                -var "sec_ports=${SecurityPorts}" \
                                 --auto-approve
                         '''
                     }

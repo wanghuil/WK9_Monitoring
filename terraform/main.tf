@@ -13,32 +13,16 @@ provider "aws" {
   region  = "ap-southeast-2"
 }
 
-resource "aws_security_group_rule" "allow_80" {
+resource "aws_security_group_rule" "monitor_ports" {
+  for_each          = toset(var.sec_ports)
   type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  security_group_id = var.sec_gid //
-  cidr_blocks       = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "allow_8080" {
-  type              = "ingress"
-  from_port         = 8080
-  to_port           = 8080
+  from_port         = each.key
+  to_port           = each.key
   protocol          = "tcp"
   security_group_id = var.sec_gid
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "allow_22" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  security_group_id = var.sec_gid
-  cidr_blocks       = ["0.0.0.0/0"]
-}
 
 resource "aws_key_pair" "deployer" {
   key_name   = "ansible-deployer-key"
@@ -72,7 +56,8 @@ resource "aws_instance" "monitor" {
   key_name = "${aws_key_pair.deployer.key_name}"
 
   tags = {
-    Name = (count.index==0 ? "monitor-main" : "monitor-exporter-${count.index}")
+    Name    = (count.index==0 ? "main" : "exporter-${count.index}")
+    Group   = (count.index==0 ? "main" : "exporter")
     Project = "JRMonitor"
   }
 }

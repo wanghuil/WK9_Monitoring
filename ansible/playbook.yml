@@ -1,0 +1,45 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  user: ubuntu
+  tasks:
+    - name: Update repositories cache and install "docker-compose" package
+      apt:
+        name: docker-compose
+        state: present # declerative
+        update_cache: yes
+
+- hosts: Monitor_main
+  become: yes
+  become_user: root
+  user: ubuntu
+  tasks:
+    - name: Copy docker-compose-main.yml to remote /home/ubuntu/docker-compose.yml
+      copy:
+        src: docker-compose-main.yml
+        dest: /home/ubuntu/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+    - name: Run docker-compose in /home/ubuntu
+      ansible.builtin.shell:
+        chdir: /home/ubuntu/
+        cmd: docker-compose up -d
+
+- hosts: Monitor_exporter
+  become: yes
+  become_user: root
+  user: ubuntu
+  tasks:
+    - name: Copy docker-compose-exporter.yml to remote /home/ubuntu/docker-compose.yml
+      copy:
+        src: docker-compose-exporter.yml
+        dest: /home/ubuntu/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+    - name: Run docker-compose in /home/ubuntu
+      ansible.builtin.shell:
+        chdir: /home/ubuntu/
+        cmd: docker-compose up -d

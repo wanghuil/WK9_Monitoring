@@ -6,7 +6,8 @@ regions:
 filters:
   tag:Project: JRMonitor
 keyed_groups:
-  - prefix: tag # prefix is 'tag_'
-    key: tags['Name'] # the Name tag can be 'shell' or 'ansible'
-
-    # so the groups are tag_web and tag_redis
+  - prefix: Monitor # prefix is 'Monitor_'
+    key: tags['Group'] # the Name tag can be 'main' or 'exporter'
+hostnames:
+  - tag:Name
+    # so the groups are Monitor_main and Monitor_exporter
