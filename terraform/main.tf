@@ -46,7 +46,7 @@ resource "aws_key_pair" "deployer" {
 }
 
 data "aws_ami" "image-ubuntu" {
-    filters = {
+    filter = {
       name                = "ubuntu/images/*ubuntu-focal-20.04-amd64-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
