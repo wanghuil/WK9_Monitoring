@@ -126,8 +126,8 @@ pipeline {
                     }
                     dir('ansible') {
                         sh """
-                            sed -i 's/Exporter1_IP/${Exporter1_IP}/g' prometheus.yaml
-                            sed -i 's/Exporter2_IP/${Exporter2_IP}/g' prometheus.yaml
+                            sed -i 's/Exporter1_IP/${Exporter1_IP}/g' prometheus.yml
+                            sed -i 's/Exporter2_IP/${Exporter2_IP}/g' prometheus.yml
                             ansible-playbook playbook.yml 
                     """
                     }

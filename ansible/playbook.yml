@@ -19,7 +19,7 @@
       copy: src={{ item.src }} dest={{ item.dest }} mode=0644 owner=ubuntu
       with_items:
         - { src: 'docker-compose-main.yml', dest: '/home/ubuntu/docker-compose.yml'}
-        - { src: 'prometheus.yaml', dest: '/home/ubuntu/prometheus.yaml'}
+        - { src: 'prometheus.yml', dest: '/home/ubuntu/prometheus.yml'}
     - name: Run docker-compose in /home/ubuntu
       become: True
       shell:
