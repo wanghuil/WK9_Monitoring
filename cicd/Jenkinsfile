@@ -95,8 +95,6 @@ pipeline {
                     dir('ansible') {
                         sh '''
                             ansible all  -m ping
-                            ansible tag_shell -a "cat /home/ubuntu/hello.txt"
-                            ansible tag_ansible -a "curl localhost"
                         '''
                     }
                 }
