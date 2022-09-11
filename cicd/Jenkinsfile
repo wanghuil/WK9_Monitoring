@@ -93,8 +93,10 @@ pipeline {
                                 --auto-approve
                         '''
                         // jq must be installed
-                        Exporter1_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[1]'").trim()
-                        Exporter2_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[2]'").trim()
+                        script{
+                            Exporter1_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[1]'").trim()
+                            Exporter2_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[2]'").trim()
+                        }
                     }
                 }
                 dir('ansible') {
