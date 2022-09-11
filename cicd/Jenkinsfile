@@ -24,7 +24,7 @@ pipeline {
         InstanceType    = 't2.micro'
         SecurityGroupID = 'sg-da83229f'
         InstanceCount   = 3
-        SecurityPorts   = [22,443,8080,9090,9100]
+        SecurityPorts   = '[22,443,8080,9090,9100]'
 
     }
     // Test passed on a Jenkins server installed on VM
