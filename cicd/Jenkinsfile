@@ -3,7 +3,7 @@ pipeline {
     parameters {
         booleanParam defaultValue: false, name: 'blCreateVPC'
         booleanParam defaultValue: false, name: 'blCreateInstances'
-        booleanParam defaultValue: false, name: 'blApplyAWS'
+        booleanParam defaultValue: false, name: 'blTFApply'
         booleanParam defaultValue: false, name: 'blTestAnsible'
         booleanParam defaultValue: false, name: 'blUpdateAWS'
         booleanParam defaultValue: false, name: 'blDestroy'
@@ -21,8 +21,9 @@ pipeline {
         VPCTemplate     = 'vpc-alb-app-db.yaml'
         EC2StackName    = 'LinuxMachineDeploy'
         EC2Template     = 'LinuxMachineDeploy.yaml'
-        //VPCName      = 'WebApp1'
         InstanceType    = 't2.micro'
+        SecurityGroupID = 'sg-da83229f'
+        InstanceCount   = 3
 
     }
     stages {
@@ -42,16 +43,11 @@ pipeline {
                             aws s3 rm s3://$S3BucketName/$VPCTemplate
                             aws s3 rb s3://$S3BucketName
                         '''
-                    }
-                }
-            }
-        }
-        stage('Create Instances') {
-            when {expression{return params.blCreateInstances}}
-            steps {
-                withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
-                    // some block
-                    dir('cfn') {
+                        script {
+                            timeout(10) {
+                                input "Have the VPS ALB ... been created?"
+                            }
+                        }
                         sh '''
                             aws cloudformation create-stack --stack-name $EC2StackName \
                             --template-body file://$EC2Template \
@@ -64,15 +60,19 @@ pipeline {
                 }
             }
         }
+
         stage('Launch Instances') {
-            when {expression{return params.blApplyAWS}}
+            when {expression{return params.blTFApply}}
             steps {
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
                     // some block
-                    dir('terraform/aws') {
+                    dir('terraform') {
                         sh '''
                             terraform init
-                            terraform apply --auto-approve
+                            terraform apply \
+                                -var="sec_gid=${SecurityGroupID}" \
+                                -var "ec2_count=${InstanceCount}" \
+                                --auto-approve
                         '''
                     }
                 }
@@ -111,11 +111,10 @@ pipeline {
             steps {
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
                     // some block
-                    dir('terraform/aws') {
+                    dir('terraform') {
                         sh '''
                             terraform destroy --auto-approve
                         '''
-                        sh 'chmod +x ./del_ami.sh && ./del_ami.sh'
                     }
                 }
             }
