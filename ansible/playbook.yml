@@ -38,5 +38,6 @@
         group: ubuntu
         mode: '0644'
     - name: Run docker-compose in /home/ubuntu
-      community.general.docker_compose:
+      ansible.builtin.shell:
+        cmd: "docker-compose up -d"
         project_src: /home/ubuntu/
