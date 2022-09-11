@@ -7,7 +7,6 @@ pipeline {
         booleanParam defaultValue: false, name: 'blTestAnsible'
         booleanParam defaultValue: false, name: 'blUpdateAWS'
         booleanParam defaultValue: false, name: 'blDestroy'
-
     }
     options {
         ansiColor('xterm')
@@ -73,6 +72,7 @@ pipeline {
                 }
             }
         }
+        def Exporter1_IP, Exporter2_IP
         stage('TF Launch Instances') {
             // Terraform must be installed
             // ssh key pairs must be configured:
@@ -91,7 +91,10 @@ pipeline {
                                 -var "ec2_count=${InstanceCount}" \
                                 -var "sec_ports=${SecurityPorts}" \
                                 --auto-approve
+                            terraform output ecw_public_ips[1]
                         '''
+                        // jq must be installed
+                        //dd_ip = sh(returnStdout: true, script: "terraform output ecw_public_ips[1]").trim() | jq
                     }
                 }
             }
