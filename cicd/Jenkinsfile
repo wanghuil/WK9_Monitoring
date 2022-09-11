@@ -122,7 +122,10 @@ pipeline {
                     // some block
                     dir('terraform') {
                         sh '''
-                            terraform destroy --auto-approve
+                            terraform destroy   \
+                                -var "sec_gid=${SecurityGroupID}" \
+                                -var "ec2_count=${InstanceCount}" \
+                                --auto-approve
                         '''
                     }
                 }

@@ -72,7 +72,7 @@ resource "aws_instance" "monitor" {
   key_name = "${aws_key_pair.deployer.key_name}"
 
   tags = {
-    Name = (count.index==1 ? "monitor-main" : "monitor-exporter-${count.index}")
+    Name = (count.index==0 ? "monitor-main" : "monitor-exporter-${count.index}")
     Project = "JRMonitor"
   }
 }
