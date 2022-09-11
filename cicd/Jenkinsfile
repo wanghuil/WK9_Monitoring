@@ -72,7 +72,7 @@ pipeline {
                 }
             }
         }
-        def Exporter1_IP, Exporter2_IP
+       // def Exporter1_IP, Exporter2_IP
         stage('TF Launch Instances') {
             // Terraform must be installed
             // ssh key pairs must be configured:
