@@ -1,3 +1,4 @@
+def Exporter1_IP, Exporter2_IP
 pipeline {
     agent any
     parameters {
@@ -72,7 +73,6 @@ pipeline {
                 }
             }
         }
-       // def Exporter1_IP, Exporter2_IP
         stage('TF Launch Instances') {
             // Terraform must be installed
             // ssh key pairs must be configured:
@@ -91,11 +91,17 @@ pipeline {
                                 -var "ec2_count=${InstanceCount}" \
                                 -var "sec_ports=${SecurityPorts}" \
                                 --auto-approve
-                            terraform output -json ec2_public_ips | jq -r \'.[1]\'
                         '''
                         // jq must be installed
-                        //dd_ip = sh(returnStdout: true, script: "terraform output -json ecw_public_ips[1]").trim() | jq
+                        Exporter1_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[1]'").trim()
+                        Exporter2_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[2]'").trim()
                     }
+                }
+                dir('ansible') {
+                    sh """
+                        sed -i 's/Exporter1_IP/${Exporter1_IP}/g' prometheus.yaml
+                        sed -i 's/Exporter2_IP/${Exporter2_IP}/g' prometheus.yaml
+                    """
                 }
             }
         }
@@ -122,6 +128,7 @@ pipeline {
                     // some block
                     dir('ansible') {
                         sh '''
+
                             ansible-playbook jenkins_docker.yml 
                         '''
                     }
