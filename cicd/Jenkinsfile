@@ -93,18 +93,7 @@ pipeline {
                                 -var "sec_ports=${SecurityPorts}" \
                                 --auto-approve
                         '''
-                        // jq must be installed
-                        script{
-                            Exporter1_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[1]'").trim()
-                            Exporter2_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[2]'").trim()
-                        }
                     }
-                }
-                dir('ansible') {
-                    sh """
-                        sed -i 's/Exporter1_IP/${Exporter1_IP}/g' prometheus.yaml
-                        sed -i 's/Exporter2_IP/${Exporter2_IP}/g' prometheus.yaml
-                    """
                 }
             }
         }
@@ -124,16 +113,23 @@ pipeline {
                 }
             }
         }
-        stage('Update AWS EC2') {
+        stage('Setup Instances') {
             when {expression{return params.blUpdateAWS}}
             steps {
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
-                    // some block
+                    // jq must be installed
+                    dir('terraform') {
+                        script{
+                            Exporter1_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[1]'").trim()
+                            Exporter2_IP = sh(returnStdout: true, script: "terraform output -json ec2_public_ips | jq -r '.[2]'").trim()
+                        }
+                    }
                     dir('ansible') {
-                        sh '''
-
-                            ansible-playbook jenkins_docker.yml 
-                        '''
+                        sh """
+                            sed -i 's/Exporter1_IP/${Exporter1_IP}/g' prometheus.yaml
+                            sed -i 's/Exporter2_IP/${Exporter2_IP}/g' prometheus.yaml
+                            ansible-playbook playbook.yml 
+                    """
                     }
                 }
             }
