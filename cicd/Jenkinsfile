@@ -26,6 +26,7 @@ pipeline {
         SecurityGroupID = 'sg-da83229f'
         InstanceCount   = 3
         SecurityPorts   = '[22,443,3000,8080,9100]' //SSH, HTTPS, grafana, cadvisor, node-exporter
+        JenkinsServer   = 'cicd.willido.net'
 
     }
     // Test passed on a Jenkins server installed on VM
@@ -128,6 +129,7 @@ pipeline {
                         sh """
                             sed -i 's/Exporter1_IP/${Exporter1_IP}/g' prometheus.yml
                             sed -i 's/Exporter2_IP/${Exporter2_IP}/g' prometheus.yml
+                            sed -i 's/MyJenkinsServer/${JenkinsServer}/g' prometheus.yml
                             ansible-playbook playbook.yml 
                     """
                     }

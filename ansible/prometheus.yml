@@ -13,7 +13,7 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets:
-        - localhost:9100
+        - prometheus:9100
         - Exporter1_IP:9100
         - Exporter2_IP:9100
 
@@ -21,7 +21,7 @@ scrape_configs:
     scrape_interval: 10s
     static_configs:
       - targets:
-        - localhost:8080
+        - prometheus:8080
         - Exporter1_IP:8080
         - Exporter2_IP:8080
 
@@ -29,4 +29,4 @@ scrape_configs:
     scrape_interval: 5s
     metrics_path: /prometheus/
     static_configs:
-      - targets: ['cicd.willido.net']
+      - targets: ['MyJenkinsServer']
