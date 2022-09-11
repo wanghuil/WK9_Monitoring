@@ -61,13 +61,13 @@ data "aws_ami" "image-ubuntu" {
       values = ["hvm"]
     }
     most_recent = true
-    owners      = ["099720109477"]
+    owners      = ["099720109477"] # Canonical
 }
 
 resource "aws_instance" "monitor" {
   count         = var.ec2_count
 
-  ami           = "${data.aws_ami.image-ubuntu}"
+  ami           = data.aws_ami.image-ubuntu.id
   instance_type = "t2.micro"
   key_name = "${aws_key_pair.deployer.key_name}"
 
