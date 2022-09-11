@@ -15,13 +15,11 @@
   become_user: root
   user: ubuntu
   tasks:
-    - name: Copy docker-compose-main.yml to remote /home/ubuntu/docker-compose.yml
-      copy:
-        src: docker-compose-main.yml
-        dest: /home/ubuntu/docker-compose.yml
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
+    - name: Copy docker-compose-main.yml & prometheus.yaml to remote /home/ubuntu/
+      copy: src={{ item.src }} dest={{ item.dest }} mode=0644 owner=ubuntu
+      with_items:
+        - { src: 'docker-compose-main.yml', dest: '/home/ubuntu/docker-compose.yml'}
+        - { src: 'prometheus.yaml', dest: '/home/ubuntu/prometheus.yaml'}
     - name: Run docker-compose in /home/ubuntu
       ansible.builtin.shell:
         chdir: /home/ubuntu/
