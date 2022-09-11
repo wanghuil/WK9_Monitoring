@@ -27,7 +27,7 @@ pipeline {
 
     }
     stages {
-        stage('Create VPC_ALB..') {
+        stage('CFN Create VPC_ALB..') {
             when {expression{return params.blCreateVPC}}
             steps {
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
@@ -47,7 +47,7 @@ pipeline {
                 }
             }
         }
-        stage('Create Instances') {
+        stage('CFN Create Instance') {
             when {expression{return params.blCreateInstances}}
             steps {
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
@@ -70,7 +70,7 @@ pipeline {
                 }
             }
         }
-        stage('Launch Instances') {
+        stage('TF Launch Instances') {
             when {expression{return params.blTFApply}}
             steps {
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
