@@ -46,10 +46,19 @@ resource "aws_key_pair" "deployer" {
 }
 
 data "aws_ami" "image-ubuntu" {
-    filter = {
-      name                = "ubuntu/images/*ubuntu-focal-20.04-amd64-server-*"
-      root-device-type    = "ebs"
-      virtualization-type = "hvm"
+    filter {
+      name   = "name"
+      values = ["ubuntu/images/*ubuntu-focal-20.04-amd64-server-*"]
+    }
+
+    filter {
+      name   = "root-device-type"
+      values = ["ebs"]
+    }
+
+    filter {
+      name   = "virtualization-type"
+      values = ["hvm"]
     }
     most_recent = true
     owners      = ["099720109477"]
