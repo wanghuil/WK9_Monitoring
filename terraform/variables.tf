@@ -10,5 +10,5 @@ variable "ec2_count" {
 
 variable "sec_ports" {
   description = "The number of EC2 instances to be created"
-  type        = list(number)
+  type        = list(string)
 }
