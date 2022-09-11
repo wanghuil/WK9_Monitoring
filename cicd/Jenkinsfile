@@ -43,11 +43,21 @@ pipeline {
                             aws s3 rm s3://$S3BucketName/$VPCTemplate
                             aws s3 rb s3://$S3BucketName
                         '''
-                        script {
-                            timeout(10) {
-                                input "Have the VPS ALB ... been created?"
-                            }
+                    }
+                }
+            }
+        }
+        stage('Create Instances') {
+            when {expression{return params.blCreateInstances}}
+            steps {
+                withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
+                    // some block
+                    script {
+                        timeout(10) {
+                            input "Have the VPS ALB ... been created?"
                         }
+                    }
+                    dir('cfn') {
                         sh '''
                             aws cloudformation create-stack --stack-name $EC2StackName \
                             --template-body file://$EC2Template \
@@ -60,7 +70,6 @@ pipeline {
                 }
             }
         }
-
         stage('Launch Instances') {
             when {expression{return params.blTFApply}}
             steps {
