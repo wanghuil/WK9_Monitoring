@@ -22,7 +22,8 @@
         - { src: 'prometheus.yaml', dest: '/home/ubuntu/prometheus.yaml'}
     - name: Run docker-compose in /home/ubuntu
       ansible.builtin.shell: docker-compose up
-      chdir: /home/ubuntu/
+      args:
+        chdir: /home/ubuntu/
 
 - hosts: Monitor_exporter
   become: yes
@@ -38,4 +39,5 @@
         mode: '0644'
     - name: Run docker-compose in /home/ubuntu
       ansible.builtin.shell: docker-compose up
-      chdir: /home/ubuntu/
+      args:
+        chdir: /home/ubuntu/
