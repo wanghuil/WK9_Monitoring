@@ -1,4 +1,5 @@
-def Exporter1_IP, Exporter2_IP
+def Exporter1_IP
+def Exporter2_IP
 pipeline {
     agent any
     parameters {
