@@ -23,7 +23,7 @@
     - name: Run docker-compose in /home/ubuntu
       ansible.builtin.shell:
         chdir: /home/ubuntu/
-        cmd: docker-compose up -d
+        cmd: docker-compose up
 
 - hosts: Monitor_exporter
   become: yes
@@ -40,4 +40,4 @@
     - name: Run docker-compose in /home/ubuntu
       ansible.builtin.shell:
         chdir: /home/ubuntu/
-        cmd: docker-compose up -d
+        cmd: docker-compose up
