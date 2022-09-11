@@ -79,7 +79,7 @@ pipeline {
                         sh '''
                             terraform init
                             terraform apply \
-                                -var="sec_gid=${SecurityGroupID}" \
+                                -var "sec_gid=${SecurityGroupID}" \
                                 -var "ec2_count=${InstanceCount}" \
                                 --auto-approve
                         '''

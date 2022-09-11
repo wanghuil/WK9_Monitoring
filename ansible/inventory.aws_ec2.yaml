@@ -1,0 +1,12 @@
+---
+plugin: aws_ec2
+# Populate inventory with instances in these regions
+regions:
+  - ap-southeast-2
+filters:
+  tag:Project: JRAnsible
+keyed_groups:
+  - prefix: tag # prefix is 'tag_'
+    key: tags['Name'] # the Name tag can be 'shell' or 'ansible'
+
+    # so the groups are tag_web and tag_redis
