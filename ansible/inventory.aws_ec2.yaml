@@ -8,6 +8,4 @@ filters:
 keyed_groups:
   - prefix: Monitor # prefix is 'Monitor_'
     key: tags['Group'] # the Name tag can be 'main' or 'exporter'
-hostnames:
-  - tag:Name
     # so the groups are Monitor_main and Monitor_exporter
