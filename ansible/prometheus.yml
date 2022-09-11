@@ -7,13 +7,13 @@ scrape_configs:
   - job_name: 'Prometheus'
     scrape_interval: 10s
     static_configs:
-      - targets: [ 'localhost:9090' ]
+      - targets: [ 'prometheus:9090' ]
 
   - job_name: 'Exporters'
     scrape_interval: 5s
     static_configs:
       - targets:
-        - prometheus:9100
+        - nodeexporter:9100
         - Exporter1_IP:9100
         - Exporter2_IP:9100
 
@@ -21,7 +21,7 @@ scrape_configs:
     scrape_interval: 10s
     static_configs:
       - targets:
-        - prometheus:8080
+        - cadvisor:8080
         - Exporter1_IP:8080
         - Exporter2_IP:8080
 
