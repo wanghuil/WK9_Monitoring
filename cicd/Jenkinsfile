@@ -105,6 +105,7 @@ pipeline {
             // pip install boto3 botocore
             when {expression{return params.blTestAnsible}}
             steps {
+                sleep 60
                 withAWS(credentials: AWS_CRED, region: 'ap-southeast-2') {
                     // some block
                     dir('ansible') {
