@@ -6,7 +6,9 @@
   tasks:
     - name: Update repositories cache and install "docker-compose" package
       apt:
-        name: docker-compose
+        name: 
+          - docker-compose
+          - stress
         state: present # declerative
         update_cache: yes
 

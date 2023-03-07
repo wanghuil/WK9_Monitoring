@@ -32,7 +32,7 @@ resource "aws_key_pair" "deployer" {
 data "aws_ami" "image-ubuntu" {
     filter {
       name   = "name"
-      values = ["ubuntu/images/*ubuntu-focal-20.04-amd64-server-*"]
+      values = ["ubuntu/images/*ubuntu*22.04-amd64-server-*"]
     }
 
     filter {
