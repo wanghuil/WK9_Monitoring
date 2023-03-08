@@ -52,9 +52,9 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  nodeexporter:
+  nodeexporter-master:
     image: prom/node-exporter:latest
-    container_name: nodeexporter
+    container_name: nodeexporter-master
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -74,9 +74,9 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  cadvisor:
+  cadvisor-master:
     image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
+    container_name: cadvisor-master
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw

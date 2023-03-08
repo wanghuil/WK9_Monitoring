@@ -32,6 +32,8 @@ scrape_configs:
     static_configs:
       - targets:
         - cadvisor:8080
+        - Exporter1_IP:8080
+        - Exporter2_IP:8080
 
   - job_name: 'Jenkins'
     scrape_interval: 5s
