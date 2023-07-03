@@ -14,11 +14,11 @@ pipeline {
         ansiColor('xterm')
     }
     environment {
-        AWS_CRED        = 'aws_jr_william' //Change to yours
-        OwnerEmail      = 'william@gmail.com' //Change to yours
-        S3BucketName    = 'william-jr-mornitoring' //Change to yours, used to save cfn yml files larger than 50KB
-        SecurityGroupID = 'sg-da83229f' //Change to your default VPC's default security group ID
-        JenkinsServer   = 'cicd.jiangren.com.au'   //Change to your JenkinsServer URL
+        AWS_CRED        = 'aws_jr10_wanda' //Change to yours
+        OwnerEmail      = 'liwhh0807@gmail.com' //Change to yours
+        S3BucketName    = 'jr-mornitoring-wanda' //Change to yours, used to save cfn yml files larger than 50KB
+        SecurityGroupID = 'sg-0110793fc73c65aa3' //Change to your default VPC's default security group ID
+        JenkinsServer   = 'azure.jenkins-wli.com'   //Change to your JenkinsServer URL
         AWS_REGION      = 'ap-southeast-2'
         VPCStackName    = 'VPCALBStack'
         VPCTemplate     = 'vpc-alb-app-db.yaml'
@@ -147,7 +147,9 @@ pipeline {
                         sh '''
                             terraform destroy   \
                                 -var "sec_gid=${SecurityGroupID}" \
-                                -var "ec2_count=${InstanceCount}" \
+                                -var "ec2_count=${
+                                    
+                                }" \
                                 -var "sec_ports=${SecurityPorts}" \
                                 --auto-approve
                         '''
